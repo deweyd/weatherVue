@@ -1,51 +1,34 @@
 <template>
   <div class="content">
-    <h1 v-if="Query === ''">Wonderful photos <br> from the best authors</h1>
-    <h1 v-if="Query !== ''">Search result</h1>
-    <div v-if="Query === ''" class="dropdown oriental">
-      <button class="dropbtn">Sort by</button>
-      <div class="dropdown-content">
-        <div>
-          <a href="#" @click="changeOrderBy('relevant')" :class="{ 'selected': myVariable === 'relevant' }">relevant</a>
-        </div>
-        <div>
-          <a href="#" @click="changeOrderBy('latest')" :class="{ 'selected': myVariable === 'latest' }">latest</a>
-        </div>
-        <div>
-          <a href="#" @click="changeOrderBy('oldest')" :class="{ 'selected': myVariable === 'oldest' }">oldest</a>
-        </div>
-        <div>
-          <a href="#" @click="changeOrderBy('popular')" :class="{ 'selected': myVariable === 'popular' }">popular</a>
-        </div>
-        <div>
-          <a href="#" @click="changeOrderBy('downloads')" :class="{ 'selected': myVariable === 'downloads' }">downloads</a>
+<!--    <h1 v-if="Query === ''">Wonderful photos <br> from the best authors</h1>-->
+    <div class="dropdown__box">
+      <div class="dropdown oriental">
+        <button class="dropbtn">Gender</button>
+        <div class="dropdown-content">
+          <div><a href="#" class="" @click="changeOrderBy1('all')" :class="{ 'selected': gender === 'all' }">all</a></div>
+          <div><a href="#" class="" @click="changeOrderBy('male')" :class="{ 'selected': gender === 'male' }">male</a></div>
+          <div><a href="#" class="" @click="changeOrderBy('female')" :class="{ 'selected': gender === 'female' }">female</a></div>
         </div>
       </div>
     </div>
     <div v-if="responseData" class="box">
-      <!-- Отобразить данные, если они доступны -->
       <div class="box__item" v-for="(item, index) in responseData" :key="index">
-        <div class="box__img" v-if="Query === ''"><router-link :to="{ path: '/user', query: { itemId: item.user.username, urls: item.urls.regular } }"><img :src="item.urls.small" alt=""></router-link></div>
-        <div class="box__img" v-if="Query !== ''"><router-link :to="{ path: '/likes', query: { itemId: item.user.username, urls: item.urls.regular,  profile: item.user.profile_image.large, location: item.user.location} }"><img :src="item.urls.small" alt=""></router-link></div>
-        <div class="box__name">
-          <router-link :to="{ path: '/user', query: { itemId: item.user.username } }" @click="delSearch"><img :src="item.user.profile_image.medium" alt=""></router-link>
-          <router-link  :to="{ path: '/user', query: { itemId: item.user.username } }" @click="delSearch">{{ item.user.first_name }} {{ item.user.last_name }}</router-link>
-          <span>{{formatDate(item.promoted_at)}}</span>
-          <div :to="{ path: '/likes', query: { itemId: item.user.username } }" class="box__like"><img src="https://firebasestorage.googleapis.com/v0/b/my-project-56788.appspot.com/o/like_favorite_heart_3524.png?alt=media&token=b4a85c35-3a75-497b-956a-52f90b3a2cb6" alt="">{{item.likes}}</div>
+        <div class="box__img" @click="delSearch"><router-link  :to="{ path: '/user', query: { age: item.dob.age, date: item.dob.date, email: item.email, gender: item.gender, location: item.location.city, country: item.location.country, timezone: item.location.timezone.description, phone: item.phone, picture: item.picture.large, registered: item.registered.date, name: item.name.title + '. ' + item.name.first + ' ' + item.name.last } }"><img :src="item.picture.large" alt=""></router-link></div>
+        <div class="box__info">
+          <div class="box__name">{{item.name.title}}. {{item.name.first}} {{item.name.last}}</div>
         </div>
-        <div class="box__location" v-if="item.user.location">Location: {{item.user.location}}</div>
-        <div class="box__text">{{item.alt_description}}</div>
+        <div class="box__name">{{item.location.country}}</div>
       </div>
-      <!-- Замените "someProperty" на свойство вашего объекта responseData -->
     </div>
     <div v-else>
-      <!-- Отобразить сообщение о загрузке, пока данные не загружены -->
       <p>Loading...</p>
     </div>
-    <div class="pagination">
-      <button @click="previousPage" :disabled="page === 1">Previous page</button>
+    <div class="pagination" v-if="Query === ''">
+      <button v-if="gender === 'all'" @click="previousPage">&larr;</button>
+      <button v-else @click="previousPage1" :disabled="page === 1">&larr;</button>
       <span>{{ page }}</span>
-      <button @click="nextPage" :disabled="page === totalPages">Next page</button>
+      <button v-if="gender === 'all'" @click="nextPage">&rarr;</button>
+      <button v-else @click="nextPage1" :disabled="page === totalPages">&rarr;</button>
     </div>
   </div>
 </template>
@@ -53,7 +36,6 @@
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
-const accessKey = 'KqcwT9g9M5EVFhgUPLv45ZNHdn12enV73KwL-mIeyyM';
 export default {
   name: 'AppMain',
   data() {
@@ -61,43 +43,52 @@ export default {
       responseData: null,
       page: 1,
       orientation: 'landscape',
-      perPage: 20,
+      perPage: 21,
       myVariable: 'relevant',
-      totalPages: 1,
+      totalPages: 50,
+      gender: 'all',
       searchQuery: '',
       Query: ''
     };
   },
   methods: {
     changeOrderBy(order) {
-      // Здесь ваша логика для изменения порядка сортировки
-      this.myVariable = order
-      console.log('Выбран порядок:', this.myVariable);
+      this.gender = order;
+      this.page = 1;
+      console.log(this.gender)
+      this.fetchPhotos1();
+    },
+    changeOrderBy1(order) {
+      this.gender = order;
+      this.page = 1;
       this.fetchPhotos();
     },
+    delSearch() {
+      window.location.reload();
+    },
     fetchPhotos(){
-      axios.get('https://api.unsplash.com/photos', {
-        params: {
-          client_id: accessKey,
-          include: 'user',
-          order_by: this.myVariable,
-          page: this.page,
-          orientation: this.orientation,
-          per_page: this.perPage
-        }
-      })
+      axios.get(`https://randomuser.me/api/?page=${this.page}&results=25`)
           .then(response => {
-            this.responseData = response.data; // Сохраняем полученные данные
-            console.log(this.responseData)
-            this.totalPages = Math.ceil(response.headers['x-total'] / this.perPage);
+            this.responseData = response.data.results;
+            console.error(this.responseData);
           })
           .catch(error => {
-            console.error('There has been a problem with your axios operation:', error);
+            console.error(error);
           });
     },
-    formatDate(dateTimeString) {
-      const date = new Date(dateTimeString);
-      return date.toISOString().split('T')[0];
+    fetchPhotos1(){
+      axios.get(`https://randomuser.me/api/?results=25&gender=${this.gender}`)
+          .then(response => {
+            this.responseData = response.data.results;
+            console.error(this.responseData);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+    },
+    useQuery(query) {
+      console.log('Текущий запрос:', query);
+      this.Query = query
     },
     previousPage() {
       if (this.page > 1) {
@@ -105,43 +96,64 @@ export default {
         this.fetchPhotos();
       }
     },
+    previousPage1() {
+      if (this.page > 1) {
+        this.page--;
+        this.fetchPhotos1();
+      }
+    },
     nextPage() {
       if (this.page < this.totalPages) {
         this.page++;
+        console.log(this.page)
         this.fetchPhotos();
       }
     },
-    useQuery(query) {
-      console.log('Текущий запрос:', query);
-      this.Query = query
-    },
-    delSearch() {
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+    nextPage1() {
+      if (this.page < this.totalPages) {
+        this.page++;
+        console.log(this.page)
+        this.fetchPhotos1();
+      }
     },
   },
   computed: {
-    ...mapGetters(['getSearchQuery']),
+    ...mapGetters(['getSearchQuery', 'getSearchQueryByName', 'getSearchQueryByAge']),
   },
   watch: {
     getSearchQuery(newValue) {
       this.useQuery(newValue);
       if (newValue === '') {
         this.fetchPhotos();
-        console.log(newValue)
+        console.log('55555' + newValue)
+      } else {
+        this.responseData = this.Query
+      }
+    },
+    getSearchQueryByName(newValue) {
+      this.useQuery(newValue);
+      if (newValue === '') {
+        this.fetchPhotos();
+        console.log('55555' + newValue)
+      } else {
+        this.responseData = this.Query
+      }
+    },
+    getSearchQueryByAge(newValue) {
+      this.useQuery(newValue);
+      if (newValue === '') {
+        this.fetchPhotos();
+        console.log('55555' + newValue)
       } else {
         this.responseData = this.Query
       }
     },
   },
-  beforeRouteLeave(to, from, next) {
-    this.Query = ''; // Очистка значения инпута при переходе на другую страницу
-    next();
-  },
   mounted() {
     this.fetchPhotos();
     this.useQuery(this.getSearchQuery);
+    this.useQuery(this.getSearchQueryByName);
+    this.useQuery(this.getSearchQueryByAge);
   },
 };
 </script>

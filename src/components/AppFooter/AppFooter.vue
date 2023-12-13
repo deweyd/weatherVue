@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
     <a href="/" class="logo">{{ title }}</a>
-    <div>2023 FusionPhotoBox</div>
+    <div>2023 UserBox</div>
   </footer>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   name: 'AppFooter',
   data() {
     return {
-      title: 'FusionPhotoBox',
+      title: 'UserBox',
     };
   },
   methods: {

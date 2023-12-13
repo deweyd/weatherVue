@@ -2,45 +2,24 @@
   <div class="content">
     <h1 v-if="Query !== ''">Search result</h1>
     <div class="user" v-if="responseData" :class="{ 'active': Query !== '' }">
-      <div class="user__img"><img :src="responseData[0].user.profile_image.large" alt=""></div>
-      <div class="user__name">{{ responseData[0].user.first_name }} {{ responseData[0].user.last_name }}</div>
-      <div class="user__location" v-if="responseData[0].user.location">Location: {{responseData[0].user.location}}</div>
-      <div class="box__img" v-if="url"><img :src="url" alt=""></div>
-      <div class="user__location" v-if="responseData[0].user.bio"> {{responseData[0].user.bio}}</div>
-      <a :href="responseData[0].user.portfolio_url" class="user__portfolio" v-if="responseData[0].user.portfolio_url">Portfolio: {{responseData[0].user.portfolio_url}}</a>
-      <div class="user__all">All photos ({{responseData[0].user.total_photos}} pieces) {{ responseData[0].user.first_name }} {{ responseData[0].user.last_name }}</div>
-    </div>
-    <div v-if="responseData" class="box">
-      <!-- Отобразить данные, если они доступны -->
-      <div class="box__item" v-for="(item, index) in responseData" :key="index">
-        <div></div>
-        <router-link v-if="Query !== ''" :to="{ path: '/likes', query: { itemId: item.user.username, urls: item.urls.regular,  profile: item.user.profile_image.large, location: item.user.location} }" class="box__img"><img :src="item.urls.small" alt=""></router-link>
-        <router-link v-if="Query === ''" :to="{ path: '/user', query: { itemId: item.user.username, urls: item.urls.regular } }" class="box__img"><img :src="item.urls.small" alt=""></router-link>
-        <div class="box__name" v-if="Query === ''">
-          <img :src="item.user.profile_image.medium" alt="">
-          {{ item.user.first_name }} {{ item.user.last_name }}
-          <span>{{formatDate(item.promoted_at)}}</span>
-          <div :to="{ path: '/likes', query: { itemId: item.user.username } }" class="box__like"><img src="https://firebasestorage.googleapis.com/v0/b/my-project-56788.appspot.com/o/like_favorite_heart_3524.png?alt=media&token=b4a85c35-3a75-497b-956a-52f90b3a2cb6" alt="">{{item.likes}}</div>
-        </div>
-        <div class="box__name" v-if="Query !== ''">
-          <router-link :to="{ path: '/user', query: { itemId: item.user.username } }" @click="delSearch"><img :src="item.user.profile_image.medium" alt=""></router-link>
-          <router-link :to="{ path: '/user', query: { itemId: item.user.username } }" @click="delSearch">{{ item.user.first_name }} {{ item.user.last_name }}</router-link>
-          <span>{{formatDate(item.promoted_at)}}</span>
-          <div :to="{ path: '/likes', query: { itemId: item.user.username } }" class="box__like"><img src="https://firebasestorage.googleapis.com/v0/b/my-project-56788.appspot.com/o/like_favorite_heart_3524.png?alt=media&token=b4a85c35-3a75-497b-956a-52f90b3a2cb6" alt="">{{item.likes}}</div>
-        </div>
-        <div class="box__location" v-if="item.user.location">Location: {{item.user.location}}</div>
-        <div class="box__text">{{item.alt_description}}</div>
-      </div>
-      <!-- Замените "someProperty" на свойство вашего объекта responseData -->
+      <div class="user__img"><img :src="responseData.picture" alt=""></div>
+      <div class="user__name">{{ responseData.name }}</div>
+      <div class="user__location" v-if="responseData.age">Age: {{responseData.age}}</div>
+      <div class="user__location" v-if="responseData.date">Date: {{formatDate(responseData.date)}}</div>
+      <div class="user__location" v-if="responseData.registered">Registered date: {{formatDate(responseData.registered)}}</div>
+      <div class="user__location" v-if="responseData.email">Email: {{responseData.email}}</div>
+      <div class="user__location" v-if="responseData.phone">Phone: {{responseData.phone}}</div>
+      <div class="user__location" v-if="responseData.location">Location: {{responseData.location}}</div>
+<!--      <div class="box__img" v-if="url"><img :src="url" alt=""></div>-->
+      <div class="user__location" v-if="responseData.country">Country: {{responseData.country}}</div>
+      <div class="user__location" v-if="responseData.gender">Gender: {{responseData.gender}}</div>
+      <div class="user__location" v-if="responseData.timezone">Timezone: {{responseData.timezone}}</div>
+<!--      <a :href="responseData[0].user.portfolio_url" class="user__portfolio" v-if="responseData[0].user.portfolio_url">Portfolio: {{responseData[0].user.portfolio_url}}</a>-->
+<!--      <div class="user__all">All photos ({{responseData[0].user.total_photos}} pieces) {{ responseData[0].user.first_name }} {{ responseData[0].user.last_name }}</div>-->
     </div>
     <div v-else>
       <!-- Отобразить сообщение о загрузке, пока данные не загружены -->
       <p>Loading...</p>
-    </div>
-    <div class="pagination">
-      <button @click="previousPage" :disabled="page === 1">Previous page</button>
-      <span>{{ page }}</span>
-      <button @click="nextPage" :disabled="page === totalPages">Next page</button>
     </div>
   </div>
 </template>
@@ -55,6 +34,7 @@ export default {
     return {
       url: '',
       responseData: null,
+      responseData1: null,
       page: 1,
       perPage: 12,
       Query: '',
@@ -63,7 +43,9 @@ export default {
   },
   methods: {
     fetchPhotos(){
-      const username = this.$route.query.itemId;
+      this.responseData = this.$route.query;
+      const username = this.$route.query;
+      console.log(username)
       this.url = this.$route.query.urls;
       axios.get(`https://api.unsplash.com/users/${username}/photos`, {
         params: {
@@ -73,34 +55,22 @@ export default {
         }
       })
           .then(response => {
-            this.responseData = response.data;
-            console.log(this.responseData); // Обработайте полученные фотографии здесь
+            this.responseData1 = response.data;
+            console.log(this.responseData1); // Обработайте полученные фотографии здесь
             this.totalPages = Math.ceil(response.headers['x-total'] / this.perPage);
           })
           .catch(error => {
             console.error('Ошибка при получении фотографий пользователя:', error);
           });
     },
-    formatDate(dateTimeString) {
-      const date = new Date(dateTimeString);
-      return date.toISOString().split('T')[0];
-    },
-    previousPage() {
-      if (this.page > 1) {
-        this.page--;
-        this.fetchPhotos();
-      }
-    },
-    nextPage() {
-      if (this.page < this.totalPages) {
-        this.page++;
-        this.fetchPhotos();
-      }
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const formattedDate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
+      return formattedDate;
     },
     useQuery(query) {
       console.log('Текущий запрос:', query);
       this.Query = query
-      // Делайте что-то с текущим запросом
     },
     scrollToTop() {
       const scrollDuration = 300;
@@ -112,12 +82,6 @@ export default {
           clearInterval(scrollInterval);
         }
       }, 15);
-    },
-    delSearch() {
-      this.setSearchQuery('');
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     },
     ...mapActions(['setSearchQuery'])
   },

@@ -23,7 +23,12 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: white;
   margin-top: 60px;
+  background: radial-gradient(1009.23% 696.22% at 47.6% 26.27%,#181A19 0%,#24282B 68.62%);
+}
+body{
+  padding: 0;
+  background: radial-gradient(1009.23% 696.22% at 47.6% 26.27%,#181A19 0%,#24282B 68.62%);
 }
 </style>

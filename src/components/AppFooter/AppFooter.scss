@@ -1,7 +1,7 @@
 .logo{
   font-size: 40px;
   text-decoration: none;
-  color: black;
+  color: white;
   font-family: cursive;
 }
 .footer{
@@ -13,6 +13,8 @@
   margin-bottom: -10px;
   margin-left: -8px;
   margin-right: -8px;
+  background: radial-gradient(1009.23% 696.22% at 47.6% 26.27%,#181A19 0%,#24282B 68.62%);
+  box-shadow: 0 -14px 16px #00000040;
 }
 @media screen and (max-width: 567px) {
  .footer{
