@@ -24,7 +24,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: white;
-  margin-top: 60px;
   background: radial-gradient(1009.23% 696.22% at 47.6% 26.27%,#181A19 0%,#24282B 68.62%);
 }
 body{

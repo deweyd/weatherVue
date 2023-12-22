@@ -1,7 +1,9 @@
 <template>
   <footer class="footer">
-    <a href="/" class="logo">{{ title }}</a>
-    <div>2023 UserBox</div>
+    <div class="content">
+      <a href="/" class="logo">{{ title }}</a>
+      <div>2023 {{title}}</div>
+    </div>
   </footer>
 </template>
 
@@ -11,7 +13,7 @@ export default {
   name: 'AppFooter',
   data() {
     return {
-      title: 'UserBox',
+      title: 'OpenWeathermap',
     };
   },
   methods: {

@@ -3,6 +3,17 @@
   &__location{
     text-align: left;
   }
+  &-content{
+    padding: 100px;
+    h2{
+      font-size: 35px;
+      margin-bottom: 40px;
+    }
+    p{
+      font-size: 20px;
+      line-height: 40px;
+    }
+  }
   &__email{
     font-size: 12px;
   }
@@ -69,6 +80,39 @@
     margin-bottom: 10px;
   }
 }
+.router-link-active{
+  background: cadetblue;
+  color: white!important;
+}
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  height: fit-content;
+  width: 100%;
+  &__content{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  button{
+    cursor: pointer;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+    text-decoration: none;
+    color: cadetblue;
+    background: 0 0;
+    padding: 10px 30px;
+    font-size: 15px;
+    border: 1px solid cadetblue;
+    min-width: 97px;
+  }
+  button.active{
+    background: cadetblue;
+    color: white;
+  }
+}
 .navigation{
   margin-left: 0;
   ul{
@@ -88,6 +132,55 @@
       color: cadetblue;
       text-decoration: none;
     }
+  }
+}
+.del{
+  font-size: 45px;
+  width: max-content;
+  display: block;
+  color: crimson;
+  transform: rotate(45deg);
+  position: absolute;
+  top: -13px;
+  right: 0;
+  cursor: pointer;
+}
+.popup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+.city-dell{
+  font-size: 25px;
+  cursor: pointer;
+  background: radial-gradient(1009.23% 696.22% at 47.6% 26.27%,#181A19 0%,#24282B 68.62%);
+  padding: 5px 20px;
+  &:hover{
+    opacity: 0.8;
+  }
+}
+.popup-content {
+  background-color: cadetblue;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  p{
+    font-size: 35px;
+  }
+  .dell{
+    position: absolute;
+    top: -50px;
+    right: 0px;
+    cursor: pointer;
+    font-size: 45px;
   }
 }
 .content{
@@ -137,10 +230,10 @@
     width: 100%;
     border: 1px solid cadetblue;
     padding: 40px 20px;
-    margin: 50px 0 0;
   }
   &__weak-block{
     margin-bottom: 50px;
+    margin-top: 50px;
   }
   &__input{
     display: flex;
@@ -167,55 +260,11 @@
   padding: 20px 20px 40px;
   text-align: left;
   flex-wrap: wrap;
-  justify-content: space-between;
 }
 #tab-btn-1:checked~#content-1,
 #tab-btn-2:checked~#content-2,
 #tab-btn-3:checked~#content-3 {
   display: flex;
-}
-.router-link-active{
-  background: cadetblue;
-  color: white!important;
-}
-.city-dell{
-  font-size: 25px;
-  cursor: pointer;
-  background: radial-gradient(1009.23% 696.22% at 47.6% 26.27%,#181A19 0%,#24282B 68.62%);
-  padding: 5px 20px;
-  &:hover{
-    opacity: 0.8;
-  }
-}
-.popup-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-.popup-content {
-  background-color: cadetblue;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  position: relative;
-  max-width: 540px;
-  p{
-    font-size: 30px;
-  }
-  .dell{
-    position: absolute;
-    top: -50px;
-    right: 0px;
-    cursor: pointer;
-    font-size: 45px;
-  }
 }
 .tab > label {
   display: block;
@@ -236,34 +285,21 @@
   color: #fff;
   background: cadetblue;
 }
-.tabs {
-  display: flex;
-  margin-bottom: 20px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-  height: fit-content;
+.btn-info{
+  cursor: pointer;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+  text-decoration: none;
+  color: cadetblue;
+  background: 0 0;
+  padding: 10px 30px;
+  font-size: 15px;
+  border: 1px solid cadetblue;
   width: 100%;
-  &__content{
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-  }
-  button{
-    cursor: pointer;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
-    text-decoration: none;
-    color: cadetblue;
-    background: 0 0;
-    padding: 10px 30px;
-    font-size: 15px;
-    border: 1px solid cadetblue;
-    min-width: 97px;
-  }
-  button.active{
-    background: cadetblue;
-    color: white;
-  }
+  margin-bottom: 10px;
+}
+.btn-info.active{
+  background: cadetblue;
+  color: white;
 }
 .weather-card {
   min-width: 180px;
@@ -271,14 +307,19 @@
   border: 1px solid white;
   align-items: center;
   padding: 0 10px;
+  margin-right: 10px;
   display: flex;
   flex-direction: column;
+  position: relative;
+  &:last-child{
+    margin-right: 0;
+  }
   h2{
     font-size: 18px;
     margin-bottom: 0;
     span{
       margin: 10px 0;
-      font-size: 16px;
+      font-size: 20px;
     }
   }
   p{

@@ -2,43 +2,33 @@ import { createStore } from 'vuex';
 const store = createStore({
     state() {
         return {
-            searchQuery: '',
-            searchQueryByName: '',
-            searchQueryByAge: '',
+            dataQuery: '',
+            dataSelected: []
         };
     },
     mutations: {
-        updateSearchQuery(state, payload) {
-            state.searchQuery = payload;
+        updateDataQuery(state, payload) {
+            state.dataQuery = payload;
         },
-        updateSearchQueryByName(state, payload) {
-            state.searchQueryByName = payload;
-        },
-        updateSearchQueryByAge(state, payload) {
-            state.searchQueryByAge = payload;
-        },
+        updateDataSelected(state, payload) {
+            state.dataSelected.push(payload);
+        }
     },
     actions: {
-        setSearchQuery(context, payload) {
-            context.commit('updateSearchQuery', payload);
+        setDataQuery(context, payload) {
+            context.commit('updateDataQuery', payload);
         },
-        setSearchQueryByName(context, payload) {
-            context.commit('updateSearchQueryByName', payload);
-        },
-        setSearchQueryByAge(context, payload) {
-            context.commit('updateSearchQueryByAge', payload);
-        },
+        setDataSelected(context, payload) {
+            context.commit('updateDataSelected', payload);
+        }
     },
     getters: {
-        getSearchQuery(state) {
-            return state.searchQuery;
+        getDataQuery(state) {
+            return state.dataQuery;
         },
-        getSearchQueryByName(state) {
-            return state.searchQueryByName;
-        },
-        getSearchQueryByAge(state) {
-            return state.searchQueryByAge;
-        },
+        getDataSelected(state) {
+            return state.dataSelected;
+        }
     },
 });
 
